@@ -1,0 +1,21 @@
+{
+  "name": "qr",
+  "version": "1.0.0",
+  "description": "qr",
+  "main": "",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "run-http-server": "http-server ./site -o -S"
+  },
+  "keywords": [
+    "ts",
+    "ReactTypeScript"
+  ],
+  "author": "Ivan",
+  "license": "ISC",
+  "devDependencies": {
+  },
+  "dependencies": {
+    "http-server": "^14.0.0"
+  }
+}

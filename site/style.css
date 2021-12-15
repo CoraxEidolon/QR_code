@@ -1,0 +1,41 @@
+
+
+.startScanningButton {
+    text-align: center;
+    font-size: 18pt;
+    font-weight: bold;
+    padding: 10px;
+}
+
+.cancelScanningButton {
+    margin-bottom: 20px;
+    text-align: center;
+    font-size: 18pt;
+    font-weight: bold;
+    color: darkred;
+}
+
+.selectedButton {
+    margin-top: 20px;
+    text-align: center;
+    font-size: 18pt;
+    font-weight: bold;
+    color: darkgreen;
+}
+
+
+.selectCameraTitle {
+    text-align: center;
+    font-size: 16pt;
+    font-weight: bold;
+    margin: 20px 10px;
+}
+
+.selectCameraContainer {
+    padding: 10px;
+}
+
+.selectCameraContainer select {
+    width: 100%;
+    font-size: 16pt;
+}
