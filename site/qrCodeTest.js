@@ -8,7 +8,7 @@ function eventPageLoaded() {
  * Выбор камеры
  * @param container
  */
-function cameraSelection(container) {
+function cameraSelection(container, cameraId=null) {
     container.innerHTML = '';
     Html5Qrcode.getCameras()
         .then(devices => {
@@ -24,6 +24,10 @@ function cameraSelection(container) {
 
                     if (!devices[i].hasOwnProperty('label')) {
                         continue;
+                    }
+
+                    if(cameraId === devices[i].id){
+                        option.selected='selected';
                     }
 
                     option.value = devices[i].id;
@@ -42,12 +46,11 @@ function cameraSelection(container) {
 
                 const selectedButton = document.createElement('div');
                 selectedButton.className = 'selectedButton';
-                selectedButton.innerText = 'Выбрать';
+                selectedButton.innerText = 'Начать сканирование';
                 selectedButton.onclick = () => {
                     selectedButton.onclick = null;
                     const cameraId = select.value;
 
-                    console.log(cameraId);
                     if(!cameraId){
                         return;
                     }
@@ -86,50 +89,46 @@ function createStartScanningButton(container) {
 
 
 function readQRCodeCamera(inputCameraId, containerButtonCancel) {
-    const containerCamera = document.getElementById('camera');
+    // Контейнер с результатом сканирования
+    const qrResultContainer = document.getElementById('qrResult')
 
     const html5QrCode = new Html5Qrcode('camera');
     containerButtonCancel.innerHTML = '';
 
+    function stopScanning() {
+        html5QrCode.stop()
+            .then(()=>{
+                html5QrCode.clear();
+                cameraSelection(containerButtonCancel, inputCameraId);
+                const containerCamera = document.getElementById('camera');
+                containerCamera.innerHTML = '';
+                //qrResultContainer.innerHTML = '';
+            });
+    }
+
+    //Создаем кнопку отмены сканирования
     const div_cancelScanning = document.createElement('div');
     div_cancelScanning.className = 'cancelScanningButton';
     div_cancelScanning.innerText = 'Отмена';
     div_cancelScanning.onclick = () => {
         div_cancelScanning.onclick = null;
-        console.log('stop!');
-        html5QrCode.stop()
-            .then(()=>{
-                html5QrCode.clear();
-                cameraSelection(containerButtonCancel);
-            });
+        stopScanning();
     }
 
     containerButtonCancel.append(div_cancelScanning);
 
-
     html5QrCode.start(
-        inputCameraId, // retreived in the previous step.
+        inputCameraId,
         {
-            fps: 10,    // sets the framerate to 10 frame per second
-            qrbox: {width: 250, height: 250}
-            // scannable, rest shaded.
+            fps: 10,
+            qrbox: {width: 250, height: 250},
         },
         qrCodeMessage => {
-            // do something when code is read. For example:
-            console.log(`QR Code detected: ${qrCodeMessage}`);
-
-            const qrListContainer = document.getElementById('qrResult')
-            const div_qrContainer = document.createElement('div');
-            div_qrContainer.innerText = qrCodeMessage;
-            qrListContainer.append(div_qrContainer);
-        },
-        errorMessage => {
-            // parse error, ideally ignore it. For example:
-            console.log(`QR Code no longer in front of camera.`);
-        })
-        .catch(err => {
-            // Start failed, handle it. For example,
-            console.log(`Unable to start scanning, error: ${err}`);
+            // QR найден, показываем его
+            qrResultContainer.innerText = `QR код "${qrCodeMessage}" отправлен`;
+            // Останавливаем сканер, возвращаемся обратно
+            stopScanning();
+            // ! ! ! ТУТ ДОЛЖЕН БЫТЬ ЗАПРОС НА СЕРВЕР ! ! !
         });
 }
 

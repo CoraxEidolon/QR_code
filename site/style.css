@@ -39,3 +39,10 @@
     width: 100%;
     font-size: 16pt;
 }
+
+.qrCodeResult {
+    margin-top: 10px;
+    padding: 10px;
+    font-size: 14pt;
+    text-align: center;
+}
